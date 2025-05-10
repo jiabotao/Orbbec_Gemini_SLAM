@@ -5,7 +5,7 @@
 #include "utils.hpp"
 
 #define ESC 27
-std::mutex pushMutex;
+std::mutex imu_mutex;
 
 int  main(int argc, char **argv) try {
     std::cout << "SDK version: " << ob::Version::getMajor() << "." << ob::Version::getMinor() << "." << ob::Version::getPatch() << std::endl;
@@ -42,8 +42,9 @@ int  main(int argc, char **argv) try {
             // 使用默认配置打开加速度传感器stream
             std::shared_ptr<ob::StreamProfile> profile = profiles->getProfile(OB_PROFILE_DEFAULT);
             gyroSensor->start(profile, [&](std::shared_ptr<ob::Frame> frame){
-                std::unique_lock<std::mutex> lk(pushMutex);
+                std::unique_lock<std::mutex> lock(imu_mutex);
                 imuFrameQueueContainer.enqueueToGYROQueue(frame);
+                lock.unlock();
             });
         }
     }catch(ob::Error &e){
@@ -60,8 +61,9 @@ int  main(int argc, char **argv) try {
             // 使用默认配置打开加速度传感器stream
             std::shared_ptr<ob::StreamProfile> profile = profiles->getProfile(OB_PROFILE_DEFAULT);
             accelSensor->start(profile, [&](std::shared_ptr<ob::Frame> frame) {
-                std::unique_lock<std::mutex> lk(pushMutex);
+                std::unique_lock<std::mutex> lock(imu_mutex);
                 imuFrameQueueContainer.enqueueToAccelQueue(frame);
+                lock.unlock();
             });
         }
         
