@@ -35,6 +35,7 @@ add_executable(IMUReaderDemo
     src/IMUReaderDemo.cpp 
     src/IMUFrameQueueContainer.cpp
     src/IMU.cpp
+    src/IMUProcessor.cpp
 )
 target_link_libraries(IMUReaderDemo
   /usr/local/lib/libOrbbecSDK.so

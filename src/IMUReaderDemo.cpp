@@ -3,7 +3,8 @@
 #include <libobsensor/ObSensor.hpp>
 #include "IMUFrameQueueContainer.hpp"
 #include "utils.hpp"
-#include <opencv2/opencv.hpp>
+#include <thread>
+#include <IMUProcessor.hpp>
 
 #define ESC 27
 std::mutex imu_mutex;
@@ -71,6 +72,13 @@ int  main(int argc, char **argv) try {
     }catch(ob::Error &e){
         std::cerr << "此设备不支持IMU(ACCEL)传感器" << std::endl;
         exit(EXIT_FAILURE);
+    }
+
+    IMUProcessor imuProcessor;
+    std::thread imuThread(&IMUProcessor::IMUCallBack, &imuProcessor, std::ref(imuFrameQueueContainer));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    if (imuThread.joinable()) {
+        imuThread.join();
     }
 
     while(true) {

@@ -35,7 +35,7 @@ namespace ORB_SLAM3
             EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         };
 
-        // IMU biases (gyro and accelerometer)
+        // IMU biases (gyro and accel)
         class Bias
         {
             friend class boost::serialization::access;
@@ -54,11 +54,10 @@ namespace ORB_SLAM3
         public:
             Bias() : bias_accel_x(0), bias_accel_y(0), bias_accel_z(0), bias_gyro_x(0), bias_gyro_y(0), bias_gyro_z(0) {}
             Bias(const float &bias_accel_x, const float &bias_accel_y, const float &bias_accel_z,
-                 const float &bias_gyro_x, const float &bias_gyro_y, const float &bias_gyro_z) : 
-                 bias_accel_x(bias_accel_x), bias_accel_y(bias_accel_y), bias_accel_z(bias_accel_z), 
-                 bias_gyro_x(bias_gyro_x), bias_gyro_y(bias_gyro_y), bias_gyro_z(bias_gyro_z) {}
+                 const float &bias_gyro_x, const float &bias_gyro_y, const float &bias_gyro_z) : bias_accel_x(bias_accel_x), bias_accel_y(bias_accel_y), bias_accel_z(bias_accel_z),
+                                                                                                 bias_gyro_x(bias_gyro_x), bias_gyro_y(bias_gyro_y), bias_gyro_z(bias_gyro_z) {}
             void CopyFrom(Bias &bias);
-            friend std::ostream& operator<<(std::ostream &out, const Bias &bias);
+            friend std::ostream &operator<<(std::ostream &out, const Bias &bias);
 
         public:
             float bias_accel_x, bias_accel_y, bias_accel_z;

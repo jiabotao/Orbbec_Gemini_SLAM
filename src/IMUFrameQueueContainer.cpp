@@ -13,16 +13,16 @@ void IMUFrameQueueContainer::enqueueToAccelQueue(const std::shared_ptr<ob::Frame
     uint64_t index = frame->index();
     std::shared_ptr<ob::AccelFrame> accelFrame = frame->as<ob::AccelFrame>();
     OBAccelValue value = accelFrame->value();
-    std::cout << "Accel Frame: {"
-    << "  tsp = " << timeStamp << ""
-    << "  temperature = " << accelFrame->temperature() << ""
-    << "  gyro.x = " << value.x << " rad/s"
-    << ""
-    << "  gyro.y = " << value.y << " rad/s"
-    << ""
-    << "  gyro.z = " << value.z << " rad/s"
-    << ""
-    << "}\n\r" << std::endl;
+    // std::cout << "Accel Frame: {"
+    // << "  tsp = " << timeStamp << ""
+    // << "  temperature = " << accelFrame->temperature() << ""
+    // << "  gyro.x = " << value.x << " rad/s"
+    // << ""
+    // << "  gyro.y = " << value.y << " rad/s"
+    // << ""
+    // << "  gyro.z = " << value.z << " rad/s"
+    // << ""
+    // << "}\n\r" << std::endl;
     ACCEL_Frame_Queue.push(frame);
 }
 
@@ -42,16 +42,16 @@ void IMUFrameQueueContainer::enqueueToGYROQueue(const std::shared_ptr<ob::Frame>
     std::shared_ptr<ob::GyroFrame> gyroFrame = frame->as<ob::GyroFrame>();
     uint64_t timeStamp = frame->timeStamp();
     OBGyroValue value = gyroFrame->value();
-    std::cout << "Gyro Frame: {"
-    << "  tsp = " << timeStamp << ""
-    << "  temperature = " << gyroFrame->temperature() << ""
-    << "  gyro.x = " << value.x << " rad/s"
-    << ""
-    << "  gyro.y = " << value.y << " rad/s"
-    << ""
-    << "  gyro.z = " << value.z << " rad/s"
-    << ""
-    << "}\n\r" << std::endl;
+    // std::cout << "Gyro Frame: {"
+    // << "  tsp = " << timeStamp << ""
+    // << "  temperature = " << gyroFrame->temperature() << ""
+    // << "  gyro.x = " << value.x << " rad/s"
+    // << ""
+    // << "  gyro.y = " << value.y << " rad/s"
+    // << ""
+    // << "  gyro.z = " << value.z << " rad/s"
+    // << ""
+    // << "}\n\r" << std::endl;
     GYRO_Frame_Queue.push(frame);
 }
 
