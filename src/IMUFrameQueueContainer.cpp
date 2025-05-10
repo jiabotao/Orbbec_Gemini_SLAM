@@ -15,7 +15,7 @@ void IMUFrameQueueContainer::enqueueToAccelQueue(const std::shared_ptr<ob::Frame
     OBAccelValue value = accelFrame->value();
     // std::cout << "Accel Frame: {"
     // << "  tsp = " << timeStamp << ""
-    // << "  temperature = " << accelFrame->temperature() << ""
+    // << "  index = " << index << ""
     // << "  gyro.x = " << value.x << " rad/s"
     // << ""
     // << "  gyro.y = " << value.y << " rad/s"
@@ -28,12 +28,13 @@ void IMUFrameQueueContainer::enqueueToAccelQueue(const std::shared_ptr<ob::Frame
 
 // 从Accel队列出队元素
 std::shared_ptr<ob::Frame> IMUFrameQueueContainer::dequeueFromAccelQueue() {
-    if (ACCEL_Frame_Queue.empty()) {
+    if (!ACCEL_Frame_Queue.empty()) {
         std::shared_ptr<ob::Frame> frame = ACCEL_Frame_Queue.front();
         ACCEL_Frame_Queue.pop();
         return frame;
+    }else{
+        return nullptr;
     }
-   
 }
 
 // 向队列 2 入队元素
@@ -41,10 +42,11 @@ void IMUFrameQueueContainer::enqueueToGYROQueue(const std::shared_ptr<ob::Frame>
     //std::cout << "推送GYRO数据。\n\r" << std::endl;
     std::shared_ptr<ob::GyroFrame> gyroFrame = frame->as<ob::GyroFrame>();
     uint64_t timeStamp = frame->timeStamp();
+    uint64_t index = frame->index();
     OBGyroValue value = gyroFrame->value();
     // std::cout << "Gyro Frame: {"
     // << "  tsp = " << timeStamp << ""
-    // << "  temperature = " << gyroFrame->temperature() << ""
+    // << "  index = " << index << ""
     // << "  gyro.x = " << value.x << " rad/s"
     // << ""
     // << "  gyro.y = " << value.y << " rad/s"
@@ -61,6 +63,8 @@ std::shared_ptr<ob::Frame> IMUFrameQueueContainer::dequeueFromGYROQueue() {
         std::shared_ptr<ob::Frame> frame = GYRO_Frame_Queue.front();
         GYRO_Frame_Queue.pop();
         return frame;
+    }else{
+        return nullptr;
     }
 }
 
@@ -75,6 +79,8 @@ std::shared_ptr<ob::Frame> IMUFrameQueueContainer::dequeueFromIMUQueue() {
         std::shared_ptr<ob::Frame> frame = IMU_Frame_Queue.front();
         IMU_Frame_Queue.pop();
         return frame;
+    }else{
+        return nullptr;
     }
 }
 

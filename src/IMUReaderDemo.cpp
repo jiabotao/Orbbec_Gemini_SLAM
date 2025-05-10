@@ -35,48 +35,45 @@ int  main(int argc, char **argv) try {
 
     IMUFrameQueueContainer& imuFrameQueueContainer = IMUFrameQueueContainer::getInstance();
 
-    // 获取角速度传感器,推送到GYROQueue
+    // 获取角速度传感器,推送到GYROQueue;获取加速度传感器，推送到ACCELQueue
     try{
         gyroSensor = sensorList->getSensor(OB_SENSOR_GYRO);
-        if(gyroSensor){
-            std::cout << "成功获取到IMU(GYRO)传感器。" << std::endl;
-            std::shared_ptr<ob::StreamProfileList> profiles = gyroSensor->getStreamProfileList();
+        accelSensor = sensorList->getSensor(OB_SENSOR_ACCEL);
+
+        if(gyroSensor && accelSensor){
+            std::shared_ptr<ob::StreamProfileList> gyro_profiles = gyroSensor->getStreamProfileList();
+            std::shared_ptr<ob::StreamProfileList> accel_profiles = accelSensor->getStreamProfileList();
+            // 使用默认配置打开角速度传感器stream
+            std::shared_ptr<ob::StreamProfile> gyro_profile = gyro_profiles->getProfile(OB_PROFILE_DEFAULT);
             // 使用默认配置打开加速度传感器stream
-            std::shared_ptr<ob::StreamProfile> profile = profiles->getProfile(OB_PROFILE_DEFAULT);
-            gyroSensor->start(profile, [&](std::shared_ptr<ob::Frame> frame){
-                std::unique_lock<std::mutex> lock(imu_mutex);
-                imuFrameQueueContainer.enqueueToGYROQueue(frame);
-                lock.unlock();
+            std::shared_ptr<ob::StreamProfile> accel_profile = accel_profiles->getProfile(OB_PROFILE_DEFAULT);
+
+            std::thread gyroThread([&]() {
+                gyroSensor->start(gyro_profile, [&](std::shared_ptr<ob::Frame> frame) {
+                    std::unique_lock<std::mutex> lk(imu_mutex);
+                    imuFrameQueueContainer.enqueueToGYROQueue(frame);
+                });
             });
+            
+            std::thread accelThread([&]() {
+                accelSensor->start(accel_profile, [&](std::shared_ptr<ob::Frame> frame) {
+                    std::unique_lock<std::mutex> lk(imu_mutex);
+                    imuFrameQueueContainer.enqueueToAccelQueue(frame);
+                });
+            });
+            
+            // 等待两个线程完成启动
+            gyroThread.join();
+            accelThread.join();
         }
     }catch(ob::Error &e){
         std::cerr << "此设备不支持IMU(GYRO)传感器" << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    // 获取加速度传感器，推送到ACCELQueue
-    try{
-        accelSensor = sensorList->getSensor(OB_SENSOR_ACCEL);
-        if(accelSensor){
-            std::cout << "成功获取到IMU(ACCEL)传感器。" << std::endl;
-            std::shared_ptr<ob::StreamProfileList> profiles = accelSensor->getStreamProfileList();
-            // 使用默认配置打开加速度传感器stream
-            std::shared_ptr<ob::StreamProfile> profile = profiles->getProfile(OB_PROFILE_DEFAULT);
-            accelSensor->start(profile, [&](std::shared_ptr<ob::Frame> frame) {
-                std::unique_lock<std::mutex> lock(imu_mutex);
-                imuFrameQueueContainer.enqueueToAccelQueue(frame);
-                lock.unlock();
-            });
-        }
-        
-    }catch(ob::Error &e){
-        std::cerr << "此设备不支持IMU(ACCEL)传感器" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
     IMUProcessor imuProcessor;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     std::thread imuThread(&IMUProcessor::IMUCallBack, &imuProcessor, std::ref(imuFrameQueueContainer));
-    std::this_thread::sleep_for(std::chrono::seconds(5));
     if (imuThread.joinable()) {
         imuThread.join();
     }

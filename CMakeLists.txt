@@ -30,6 +30,13 @@ else()
     message(FATAL_ERROR "OpenCV not found.")
 endif()
 
+add_executable(Demo 
+    src/demo.cpp
+)
+target_link_libraries(Demo
+  /usr/local/lib/libOrbbecSDK.so
+)
+
 
 add_executable(IMUReaderDemo 
     src/IMUReaderDemo.cpp 
