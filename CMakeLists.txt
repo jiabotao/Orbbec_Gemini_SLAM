@@ -14,6 +14,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON) # 强制要求使用指定的 C 标准
 
 include_directories(
+  /usr/include/
   /usr/local/include/eigen3
   /usr/local/include/libobsensor
   ${PROJECT_SOURCE_DIR}/include
@@ -33,8 +34,10 @@ endif()
 add_executable(IMUReaderDemo 
     src/IMUReaderDemo.cpp 
     src/IMUFrameQueueContainer.cpp
+    src/IMU.cpp
 )
 target_link_libraries(IMUReaderDemo
   /usr/local/lib/libOrbbecSDK.so
   ${OpenCV_LIBS}
+  -lboost_serialization
 )
