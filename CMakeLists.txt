@@ -14,21 +14,27 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON) # 强制要求使用指定的 C 标准
 
 include_directories(
+  /usr/local/include/eigen3
   /usr/local/include/libobsensor
   ${PROJECT_SOURCE_DIR}/include
 )
 
-# 单独运行官方demo
-add_executable(demo src/demo.cpp)
-target_link_libraries(demo
-  /usr/local/lib/libOrbbecSDK.so
-)
+link_directories(/usr/local/lib)
+find_package(OpenCV 4.4 REQUIRED)
+# 检查是否找到 OpenCV
+if(OpenCV_FOUND)
+    message(STATUS "OpenCV found: ${OpenCV_VERSION}")
+    include_directories(${OpenCV_INCLUDE_DIRS})
+else()
+    message(FATAL_ERROR "OpenCV not found.")
+endif()
 
-# 运行自己的Demo，后续SLAM
+
 add_executable(IMUReaderDemo 
     src/IMUReaderDemo.cpp 
     src/IMUFrameQueueContainer.cpp
 )
 target_link_libraries(IMUReaderDemo
   /usr/local/lib/libOrbbecSDK.so
+  ${OpenCV_LIBS}
 )
