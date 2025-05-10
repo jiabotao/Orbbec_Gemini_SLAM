@@ -27,13 +27,13 @@ void IMUFrameQueueContainer::enqueueToAccelQueue(const std::shared_ptr<ob::Frame
 }
 
 // 从Accel队列出队元素
-bool IMUFrameQueueContainer::dequeueFromAccelQueue(std::shared_ptr<ob::Frame>& frame) {
+std::shared_ptr<ob::Frame> IMUFrameQueueContainer::dequeueFromAccelQueue() {
     if (ACCEL_Frame_Queue.empty()) {
-        return false;
+        std::shared_ptr<ob::Frame> frame = ACCEL_Frame_Queue.front();
+        ACCEL_Frame_Queue.pop();
+        return frame;
     }
-    frame = ACCEL_Frame_Queue.front();
-    ACCEL_Frame_Queue.pop();
-    return true;
+   
 }
 
 // 向队列 2 入队元素
@@ -56,13 +56,12 @@ void IMUFrameQueueContainer::enqueueToGYROQueue(const std::shared_ptr<ob::Frame>
 }
 
 // 从队列 2 出队元素
-bool IMUFrameQueueContainer::dequeueFromGYROQueue(std::shared_ptr<ob::Frame>& frame) {
-    if (GYRO_Frame_Queue.empty()) {
-        return false;
+std::shared_ptr<ob::Frame> IMUFrameQueueContainer::dequeueFromGYROQueue() {
+    if (!GYRO_Frame_Queue.empty()) {
+        std::shared_ptr<ob::Frame> frame = GYRO_Frame_Queue.front();
+        GYRO_Frame_Queue.pop();
+        return frame;
     }
-    frame = GYRO_Frame_Queue.front();
-    GYRO_Frame_Queue.pop();
-    return true;
 }
 
 // 向队列 3 入队元素
@@ -71,13 +70,12 @@ void IMUFrameQueueContainer::enqueueToIMUQueue(const std::shared_ptr<ob::Frame>&
 }
 
 // 从队列 3 出队元素
-bool IMUFrameQueueContainer::dequeueFromIMUQueue(std::shared_ptr<ob::Frame>& frame) {
-    if (IMU_Frame_Queue.empty()) {
-        return false;
+std::shared_ptr<ob::Frame> IMUFrameQueueContainer::dequeueFromIMUQueue() {
+    if (!IMU_Frame_Queue.empty()) {
+        std::shared_ptr<ob::Frame> frame = IMU_Frame_Queue.front();
+        IMU_Frame_Queue.pop();
+        return frame;
     }
-    frame = IMU_Frame_Queue.front();
-    IMU_Frame_Queue.pop();
-    return true;
 }
 
 // 检查队列 1 是否为空

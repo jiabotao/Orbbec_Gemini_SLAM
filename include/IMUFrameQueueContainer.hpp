@@ -26,19 +26,19 @@ public:
     void enqueueToAccelQueue(const std::shared_ptr<ob::Frame>& frame);
 
     // 从队列 1 出队元素
-    bool dequeueFromAccelQueue(std::shared_ptr<ob::Frame>& frame);
+    std::shared_ptr<ob::Frame> dequeueFromAccelQueue();
 
     // 向队列 2 入队元素
     void enqueueToGYROQueue(const std::shared_ptr<ob::Frame>& frame);
 
     // 从队列 2 出队元素
-    bool dequeueFromGYROQueue(std::shared_ptr<ob::Frame>& frame);
+    std::shared_ptr<ob::Frame> dequeueFromGYROQueue();
 
     // 向队列 3 入队元素
     void enqueueToIMUQueue(const std::shared_ptr<ob::Frame>& frame);
 
     // 从队列 3 出队元素
-    bool dequeueFromIMUQueue(std::shared_ptr<ob::Frame>& frame);
+    std::shared_ptr<ob::Frame> dequeueFromIMUQueue();
 
     // 检查队列 1 是否为空
     bool IS_ACCEL_Frame_Queue_Empty() const;
