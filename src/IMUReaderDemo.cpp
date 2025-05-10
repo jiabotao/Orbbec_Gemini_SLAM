@@ -3,6 +3,7 @@
 #include <libobsensor/ObSensor.hpp>
 #include "IMUFrameQueueContainer.hpp"
 #include "utils.hpp"
+#include <opencv2/opencv.hpp>
 
 #define ESC 27
 std::mutex imu_mutex;
