@@ -47,7 +47,7 @@ int  main(int argc, char **argv) try {
             std::shared_ptr<ob::StreamProfile> gyro_profile = gyro_profiles->getProfile(OB_PROFILE_DEFAULT);
             // 使用默认配置打开加速度传感器stream
             std::shared_ptr<ob::StreamProfile> accel_profile = accel_profiles->getProfile(OB_PROFILE_DEFAULT);
-
+            
             std::thread gyroThread([&]() {
                 gyroSensor->start(gyro_profile, [&](std::shared_ptr<ob::Frame> frame) {
                     std::unique_lock<std::mutex> lk(imu_mutex);

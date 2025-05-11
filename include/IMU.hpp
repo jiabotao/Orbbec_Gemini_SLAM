@@ -4,8 +4,8 @@
 #include <opencv2/core/core.hpp>
 #include <Eigen/Core>
 #include <boost/serialization/serialization.hpp>
-// #include <Eigen/Geometry>
-// #include <Eigen/Dense>
+#include <Eigen/Geometry>
+#include <Eigen/Dense>
 
 namespace ORB_SLAM3
 {
@@ -64,6 +64,8 @@ namespace ORB_SLAM3
             float bias_gyro_x, bias_gyro_y, bias_gyro_z;
             EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         };
+
+        Eigen::Matrix3f NormalizeRotation(const Eigen::Matrix3f &R);
     }
 
 }
