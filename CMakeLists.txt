@@ -5,8 +5,8 @@ IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
 ENDIF()
 
-# 设置 C++ 标准为 C++11
-set(CMAKE_CXX_STANDARD 11)
+# 设置 C++ 标准为 C++17
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # 强制要求使用指定的 C++ 标准
 
 # 设置 C 标准为 C99
@@ -16,6 +16,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON) # 强制要求使用指定的 C 标准
 include_directories(
   /usr/include/
   /usr/local/include/eigen3
+  /usr/local/include/sophus
   /usr/local/include/libobsensor
   ${PROJECT_SOURCE_DIR}/include
 )

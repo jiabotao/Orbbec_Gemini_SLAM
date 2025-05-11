@@ -6,12 +6,28 @@
 #include <boost/serialization/serialization.hpp>
 #include <Eigen/Geometry>
 #include <Eigen/Dense>
+#include <sophus/so3.hpp>
 
 namespace ORB_SLAM3
 {
     namespace IMU
     {
         const float GRAVITY_VALUE = 9.7936;
+        const float eps = 1e-4;
+        
+        //Integration of 1 gyro measurement
+        class IntegratedRotation
+        {
+        public:
+            IntegratedRotation(){}
+            IntegratedRotation(const Eigen::Vector3f &angVel, const Bias &imuBias, const float &time);
+
+        public:
+            float deltaT; //integration time
+            Eigen::Matrix3f deltaR;
+            Eigen::Matrix3f rightJ; // right jacobian
+            EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+        };
 
         // IMU measurement (gyro, accelerometer and timestamp)
         class Point
@@ -66,7 +82,12 @@ namespace ORB_SLAM3
         };
 
         Eigen::Matrix3f NormalizeRotation(const Eigen::Matrix3f &R);
+        Eigen::Matrix3f RightJacobianSO3(const float &x, const float &y, const float &z);
+        Eigen::Matrix3f RightJacobianSO3(const Eigen::Vector3f &v);
+        Eigen::Matrix3f InverseRightJacobianSO3(const float &x, const float &y, const float &z);
+        Eigen::Matrix3f InverseRightJacobianSO3(const Eigen::Vector3f &v);
     }
+
 
 }
 

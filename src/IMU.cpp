@@ -1,5 +1,7 @@
-#include "IMU.hpp"
+#include <sophus/so3.hpp>
 #include <iostream>
+#include "IMU.hpp"
+
 
 namespace ORB_SLAM3
 {
@@ -50,6 +52,74 @@ namespace ORB_SLAM3
         Eigen::Matrix3f NormalizeRotation(const Eigen::Matrix3f &R){
             Eigen::JacobiSVD<Eigen::Matrix3f> svd(R, Eigen::ComputeFullU | Eigen::ComputeFullV);
             return svd.matrixU() * svd.matrixV().transpose();
+        }
+
+        Eigen::Matrix3f RightJacobianSO3(const float &x, const float &y, const float &z)
+        {
+            Eigen::Matrix3f I;
+            I.setIdentity();
+            const float d2 = x*x+y*y+z*z;
+            const float d = sqrt(d2);
+            Eigen::Vector3f v;
+            v << x, y, z;
+            Eigen::Matrix3f W = Sophus::SO3f::hat(v);
+            if(d<eps) {
+                return I;
+            }
+            else {
+                return I - W*(1.0f-cos(d))/d2 + W*W*(d-sin(d))/(d2*d);
+            }
+        }
+
+        Eigen::Matrix3f RightJacobianSO3(const Eigen::Vector3f &v)
+        {
+            return RightJacobianSO3(v(0),v(1),v(2));
+        }
+
+        Eigen::Matrix3f InverseRightJacobianSO3(const float &x, const float &y, const float &z)
+        {
+            Eigen::Matrix3f I;
+            I.setIdentity();
+            const float d2 = x*x+y*y+z*z;
+            const float d = sqrt(d2);
+            Eigen::Vector3f v;
+            v << x, y, z;
+            Eigen::Matrix3f W = Sophus::SO3f::hat(v);
+
+            if(d<eps) {
+                return I;
+            }
+            else {
+                return I + W/2 + W*W*(1.0f/d2 - (1.0f+cos(d))/(2.0f*d*sin(d)));
+            }
+        }
+
+        Eigen::Matrix3f InverseRightJacobianSO3(const Eigen::Vector3f &v)
+        {
+            return InverseRightJacobianSO3(v(0),v(1),v(2));
+        }
+
+        IntegratedRotation::IntegratedRotation(const Eigen::Vector3f &angVel, const Bias &imuBias, const float &time) {
+            const float x = (angVel(0)-imuBias.bias_gyro_x)*time;
+            const float y = (angVel(1)-imuBias.bias_gyro_y)*time;
+            const float z = (angVel(2)-imuBias.bias_gyro_z)*time;
+        
+            const float d2 = x*x+y*y+z*z;
+            const float d = sqrt(d2);
+        
+            Eigen::Vector3f v;
+            v << x, y, z;
+            Eigen::Matrix3f W = Sophus::SO3f::hat(v);
+            if(d<eps)
+            {
+                deltaR = Eigen::Matrix3f::Identity() + W;
+                rightJ = Eigen::Matrix3f::Identity();
+            }
+            else
+            {
+                deltaR = Eigen::Matrix3f::Identity() + W*sin(d)/d + W*W*(1.0f-cos(d))/d2;
+                rightJ = Eigen::Matrix3f::Identity() - W*(1.0f-cos(d))/d2 + W*W*(d-sin(d))/(d2*d);
+            }
         }
     }
 }
