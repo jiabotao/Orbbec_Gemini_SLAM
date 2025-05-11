@@ -17,6 +17,7 @@ include_directories(
   /usr/include/
   /usr/local/include/eigen3
   /usr/local/include/sophus
+  /usr/local/include/g2o
   /usr/local/include/libobsensor
   ${PROJECT_SOURCE_DIR}/include
 )
@@ -37,7 +38,11 @@ add_executable(IMUReaderDemo
     src/IMU.cpp
     src/IMUProcessor.cpp
 )
-target_link_libraries(IMUReaderDemo
+
+file(GLOB G2O_LIBRARIES CONFIGURE_DEPENDS "/usr/local/lib/libg2o_*.so")
+
+target_link_libraries(IMUReaderDemo PRIVATE
+  ${G2O_LIBRARIES}
   /usr/local/lib/libOrbbecSDK.so
   ${OpenCV_LIBS}
   -lboost_serialization

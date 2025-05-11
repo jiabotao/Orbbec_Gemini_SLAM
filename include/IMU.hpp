@@ -7,6 +7,7 @@
 #include <Eigen/Geometry>
 #include <Eigen/Dense>
 #include <sophus/so3.hpp>
+#include <g2o/core/block_solver.h>
 
 namespace ORB_SLAM3
 {
