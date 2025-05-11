@@ -42,3 +42,11 @@ target_link_libraries(IMUReaderDemo
   ${OpenCV_LIBS}
   -lboost_serialization
 )
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(IMUReader 
+    Examples/OrbbecIMUSetting.cpp 
+)
+target_link_libraries(IMUReader
+  /usr/local/lib/libOrbbecSDK.so
+)

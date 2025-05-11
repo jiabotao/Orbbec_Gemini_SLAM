@@ -48,8 +48,14 @@ namespace ORB_SLAM3
          * 然而，由于数值计算误差的存在，在进行多次矩阵运算后，旋转矩阵可能会逐渐失去正交性，从而影响旋转表示的准确性。
          * 因此，需要对旋转矩阵进行归一化处理，使其重新满足正交性条件。
          * 行列式为 1 的正交矩阵属于特殊正交群 SO (n)，表示纯旋转。
+         * 通过奇异值分解并重构矩阵，可以得到一个新的矩阵，该矩阵是正交的，并且尽可能接近原始矩阵 \(\mathbf{R}\)。
          * */
         Eigen::Matrix3f NormalizeRotation(const Eigen::Matrix3f &R){
+            /**
+             * svd 是 Eigen::JacobiSVD<Eigen::Matrix3f> 类的一个对象实例。
+             * 通过这个对象，我们可以访问奇异值分解的结果，像奇异值、左奇异向量矩阵 U 和右奇异向量矩阵 V 等。
+             * 这行代码的作用是对矩阵 R 进行奇异值分解，并将分解结果存储在 svd 对象中，方便后续使用。
+             */
             Eigen::JacobiSVD<Eigen::Matrix3f> svd(R, Eigen::ComputeFullU | Eigen::ComputeFullV);
             return svd.matrixU() * svd.matrixV().transpose();
         }
@@ -58,6 +64,7 @@ namespace ORB_SLAM3
          * 计算特殊正交群SO(3)右雅可比矩阵的函数
          * 特殊正交群SO(3)常被用来表示三维空间中的旋转，而右雅可比矩阵在处理旋转的线性近似和误差传播等问题时非常重要。
          * x, y, z：这三个参数是三维向量v= [x, y, z]的三个分量，该向量表示旋转的李代数元素，对应于旋转轴和旋转角度的一种表示方式。
+         * 用于处理旋转的线性近似和误差传播
          */
         Eigen::Matrix3f RightJacobianSO3(const float &x, const float &y, const float &z)
         {
