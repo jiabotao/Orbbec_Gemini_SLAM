@@ -69,3 +69,13 @@ target_link_libraries(DBoW3Test
   ${OpenCV_LIBS}
   ${DBoW3_LIBS}
 )
+
+# Examples/ORBextractorTest.cpp 编译配置
+add_executable(ORBextractorTest 
+    Examples/ORBextractorTest.cpp
+    src/ORBextractor.cpp
+)
+target_link_libraries(ORBextractorTest
+  ${OpenCV_LIBS}
+  ${DBoW3_LIBS}
+)
