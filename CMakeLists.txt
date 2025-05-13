@@ -32,11 +32,15 @@ else()
     message(FATAL_ERROR "OpenCV not found.")
 endif()
 
+set( DBoW3_INCLUDE_DIRS "/usr/local/include" )#在文件的前部插入
+set( DBoW3_LIBS "/usr/local/lib/libDBoW3.so" )#在文件的前部插入
+
 add_executable(IMUReaderDemo 
     src/IMUReaderDemo.cpp 
     src/IMUFrameQueueContainer.cpp
     src/IMU.cpp
     src/IMUProcessor.cpp
+    src/ORBextractor.cpp
 )
 
 file(GLOB G2O_LIBRARIES CONFIGURE_DEPENDS "/usr/local/lib/libg2o_*.so")
@@ -45,6 +49,7 @@ target_link_libraries(IMUReaderDemo PRIVATE
   ${G2O_LIBRARIES}
   /usr/local/lib/libOrbbecSDK.so
   ${OpenCV_LIBS}
+  ${DBoW3_LIBS}
   -lboost_serialization
 )
 
@@ -54,4 +59,13 @@ add_executable(IMUReader
 )
 target_link_libraries(IMUReader
   /usr/local/lib/libOrbbecSDK.so
+)
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(DBoW3Test 
+    Examples/DBoW3Test.cpp 
+)
+target_link_libraries(DBoW3Test
+  ${OpenCV_LIBS}
+  ${DBoW3_LIBS}
 )

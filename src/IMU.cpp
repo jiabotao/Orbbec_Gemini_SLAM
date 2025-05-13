@@ -1,4 +1,4 @@
-#include <sophus/so3.hpp>
+#include <sophus/se3.hpp>
 #include <iostream>
 #include "IMU.hpp"
 
