@@ -26,9 +26,12 @@ int main() {
     vLappingArea.resize(2);
     vLappingArea[0] = 0;
     vLappingArea[1] = image.cols;
-    std::cout << "图像已成功保存到1111111ma "  << std::endl;
     // 提取特征点和描述符
     int monoIndex = orbExtractor(image, cv::noArray(), keypoints, descriptors, vLappingArea);
+
+    // 上面的代码使用了运算符重载，等同于下面的调用operator方法，目前还不能理解这么做的好处。
+    //int monoIndex = mpORBextractorLeft->operator()(image, cv::noArray(), keypoints, descriptors, vLappingArea);
+
      
 
     // 绘制特征点
