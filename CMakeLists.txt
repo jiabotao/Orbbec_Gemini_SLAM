@@ -15,6 +15,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON) # 强制要求使用指定的 C 标准
 
 include_directories(
   /usr/include/
+  #/usr/include/fmt
   /usr/local/include/eigen3
   /usr/local/include/sophus
   /usr/local/include/g2o
