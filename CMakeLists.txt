@@ -80,3 +80,11 @@ target_link_libraries(ORBextractorTest
   ${OpenCV_LIBS}
   ${DBoW3_LIBS}
 )
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(ModeList 
+    Examples/ViewTest.cpp 
+)
+target_link_libraries(ModeList
+  /usr/local/lib/libOrbbecSDK.so
+)

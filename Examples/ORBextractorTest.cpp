@@ -13,7 +13,7 @@ int main() {
     ORB_SLAM3::ORBextractor orbExtractor(nfeatures, scaleFactor, nlevels, iniThFAST, minThFAST);
 
     // 读取图像
-    cv::Mat image = cv::imread("test.jpg", cv::IMREAD_GRAYSCALE);
+    cv::Mat image = cv::imread("test_left.png", cv::IMREAD_GRAYSCALE);
     if (image.empty()) {
         std::cerr << "Could not open or find the image" << std::endl;
         return -1;
