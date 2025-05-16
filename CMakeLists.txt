@@ -88,3 +88,12 @@ add_executable(ModeList
 target_link_libraries(ModeList
   /usr/local/lib/libOrbbecSDK.so
 )
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(DoubleInfraredViewer 
+    Examples/DoubleInfraredViewer.cpp 
+)
+target_link_libraries(DoubleInfraredViewer
+  ${OpenCV_LIBS}
+  /usr/local/lib/libOrbbecSDK.so
+)
