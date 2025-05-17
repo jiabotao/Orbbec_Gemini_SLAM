@@ -97,3 +97,12 @@ target_link_libraries(DoubleInfraredViewer
   ${OpenCV_LIBS}
   /usr/local/lib/libOrbbecSDK.so
 )
+
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(TurnOffLaserDemo 
+    Examples/OrbbecDemo/TurnOffLaserDemo.cpp 
+)
+target_link_libraries(TurnOffLaserDemo
+  /usr/local/lib/libOrbbecSDK.so
+)

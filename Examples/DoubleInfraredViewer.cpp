@@ -6,7 +6,14 @@
 int main(int argc, char **argv) try {
     // Create a pipeline with default device
     ob::Pipeline pipe;
-
+    std::shared_ptr<ob::Context> ctx = std::make_shared<ob::Context>();
+    std::shared_ptr<ob::DeviceList> devices = ctx->queryDeviceList();
+    auto device = devices->getDevice(0);
+    device->setBoolProperty(OB_PROP_LASER_CONTROL_INT, 0);
+    //device->setBoolProperty(OB_PROP_IR_AUTO_EXPOSURE_BOOL, 0);
+    //device->setIntProperty(OB_PROP_LASER_CONTROL_INT, 100000);
+    device->setBoolProperty(OB_PROP_IR_AUTO_EXPOSURE_BOOL, 1);
+    device->setIntProperty(OB_PROP_IR_AE_MAX_EXPOSURE_INT, 100000);
     // Configure which streams to enable or disable for the Pipeline by creating a Config
     std::shared_ptr<ob::Config> config = std::make_shared<ob::Config>();
 
@@ -22,7 +29,7 @@ int main(int argc, char **argv) try {
 
     // Open the default profile of IR_LEFT Sensor, which can be configured through the configuration file
     try {
-        auto irLeftProfile = irLeftProfiles->getProfile(36);
+        auto irLeftProfile = irLeftProfiles->getProfile(0);
         config->enableStream(irLeftProfile->as<ob::VideoStreamProfile>());
     }
     catch(...) {
@@ -34,7 +41,7 @@ int main(int argc, char **argv) try {
 
     // Open the default profile of IR_RIGHT Sensor, which can be configured through the configuration file
     try {
-        auto irRightProfile = irRightProfiles->getProfile(36);
+        auto irRightProfile = irRightProfiles->getProfile(0);
         config->enableStream(irRightProfile->as<ob::VideoStreamProfile>());
     }
     catch(...) {
