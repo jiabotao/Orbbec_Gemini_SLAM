@@ -104,5 +104,6 @@ add_executable(TurnOffLaserDemo
     Examples/OrbbecDemo/TurnOffLaserDemo.cpp 
 )
 target_link_libraries(TurnOffLaserDemo
+  ${OpenCV_LIBS}
   /usr/local/lib/libOrbbecSDK.so
 )

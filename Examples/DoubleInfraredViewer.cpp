@@ -10,10 +10,10 @@ int main(int argc, char **argv) try {
     std::shared_ptr<ob::DeviceList> devices = ctx->queryDeviceList();
     auto device = devices->getDevice(0);
     device->setBoolProperty(OB_PROP_LASER_CONTROL_INT, 0);
-    //device->setBoolProperty(OB_PROP_IR_AUTO_EXPOSURE_BOOL, 0);
-    //device->setIntProperty(OB_PROP_LASER_CONTROL_INT, 100000);
-    device->setBoolProperty(OB_PROP_IR_AUTO_EXPOSURE_BOOL, 1);
-    device->setIntProperty(OB_PROP_IR_AE_MAX_EXPOSURE_INT, 100000);
+    // device->setBoolProperty(OB_PROP_IR_AUTO_EXPOSURE_BOOL, 0);
+    // device->setIntProperty(OB_PROP_LASER_CONTROL_INT, 100000);
+    // device->setBoolProperty(OB_PROP_IR_AUTO_EXPOSURE_BOOL, 1);
+    // device->setIntProperty(OB_PROP_IR_AE_MAX_EXPOSURE_INT, 100000);
     // Configure which streams to enable or disable for the Pipeline by creating a Config
     std::shared_ptr<ob::Config> config = std::make_shared<ob::Config>();
 
