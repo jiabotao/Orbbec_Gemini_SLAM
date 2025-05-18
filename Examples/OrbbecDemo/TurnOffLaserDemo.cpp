@@ -8,12 +8,12 @@ int main(int argc, char **argv) try {
     ob::Pipeline pipe;
     std::shared_ptr<ob::Context> ctx = std::make_shared<ob::Context>();
     std::shared_ptr<ob::DeviceList> devices = ctx->queryDeviceList();
-    auto device = devices->getDevice(0);
+    std::shared_ptr<ob::Device> device = devices->getDevice(0);
     device->setBoolProperty(OB_PROP_LASER_CONTROL_INT, 0);
     std::shared_ptr<ob::Config> config = std::make_shared<ob::Config>();
 
     // Get the ir_left camera configuration list
-    auto irLeftProfiles = pipe.getStreamProfileList(OB_SENSOR_IR_LEFT);
+    std::shared_ptr<ob::StreamProfileList> irLeftProfiles = pipe.getStreamProfileList(OB_SENSOR_IR_LEFT);
 
     if(irLeftProfiles == nullptr) {
         std::cerr
