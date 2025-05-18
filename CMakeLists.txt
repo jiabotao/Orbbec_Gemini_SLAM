@@ -56,7 +56,7 @@ target_link_libraries(IMUReaderDemo PRIVATE
 
 # Examples/OrbbecIMUSetting.cpp 编译配置
 add_executable(IMUReader 
-    Examples/OrbbecIMUSetting.cpp 
+    Examples/OrbbecDemo/OrbbecIMUSetting.cpp 
 )
 target_link_libraries(IMUReader
   /usr/local/lib/libOrbbecSDK.so
@@ -83,7 +83,7 @@ target_link_libraries(ORBextractorTest
 
 # Examples/OrbbecIMUSetting.cpp 编译配置
 add_executable(ModeList 
-    Examples/ViewTest.cpp 
+    Examples/OrbbecDemo/ViewTest.cpp 
 )
 target_link_libraries(ModeList
   /usr/local/lib/libOrbbecSDK.so
