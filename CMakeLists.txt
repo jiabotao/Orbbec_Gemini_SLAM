@@ -97,3 +97,21 @@ target_link_libraries(TurnOffLaserDemo
   ${OpenCV_LIBS}
   /usr/local/lib/libOrbbecSDK.so
 )
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(OrbbecDoubleIRView 
+    Examples/OrbbecDemo/OrbbecDoubleIRView.cpp 
+)
+target_link_libraries(OrbbecDoubleIRView
+  ${OpenCV_LIBS}
+  /usr/local/lib/libOrbbecSDK.so
+)
+
+# Examples/OrbbecIMUSetting.cpp 编译配置
+add_executable(MultiDevice 
+    Examples/OrbbecDemo/MultiDevice.cpp 
+)
+target_link_libraries(MultiDevice
+  ${OpenCV_LIBS}
+  /usr/local/lib/libOrbbecSDK.so
+)
