@@ -72,14 +72,6 @@ function(create_example name sources)
   )
 endfunction()
 
-# Examples/ORBextractorTest.cpp 编译配置
-add_executable(ORBextractorTest 
-    Examples/ORBextractorTest.cpp
-    src/ORBextractor.cpp
-)
-target_link_libraries(ORBextractorTest
-  ${OpenCV_LIBS}
-  ${DBoW3_LIBS}
-)
 
-create_example(DBoW3Test Examples/DBoW3Test.cpp)
+# create_example(DBoW3Test Examples/DBoW3Test.cpp)
+create_example(DoubleIRTest Examples/DoubleIRTest.cpp)
