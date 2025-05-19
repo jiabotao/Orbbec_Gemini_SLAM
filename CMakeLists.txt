@@ -7,7 +7,6 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include_directories(
-  /usr/include/
   /opt/OrbbecSDK/include
   ${PROJECT_SOURCE_DIR}/include
 )
@@ -37,6 +36,7 @@ else()
     message(FATAL_ERROR "Eigen3 not found.")
 endif()
 
+# 检查是否找到 DBoW3
 find_package(DBoW3 REQUIRED)
 if(DBoW3_FOUND)
     include_directories(${DBoW3_INCLUDE_DIRS})
@@ -46,20 +46,20 @@ else()
     message(FATAL_ERROR "DBoW3 not found.")
 endif()
 
-add_executable(IMUReaderDemo 
-    src/IMUReaderDemo.cpp 
-    src/IMUFrameQueueContainer.cpp
-    src/IMU.cpp
-    src/IMUProcessor.cpp
-    src/ORBextractor.cpp
-)
+# add_executable(IMUReaderDemo 
+#     src/IMUReaderDemo.cpp 
+#     src/IMUFrameQueueContainer.cpp
+#     src/IMU.cpp
+#     src/IMUProcessor.cpp
+#     src/ORBextractor.cpp
+# )
 
-target_link_libraries(IMUReaderDemo
-  /opt/OrbbecSDK/lib/libOrbbecSDK.so
-  ${OpenCV_LIBS}
-  ${DBoW3_LIBRARIES}
-  -lboost_serialization
-)
+# target_link_libraries(IMUReaderDemo
+#   /opt/OrbbecSDK/lib/libOrbbecSDK.so
+#   ${OpenCV_LIBS}
+#   ${DBoW3_LIBRARIES}
+#   -lboost_serialization
+# )
 
 # 定义可重用的函数来创建可执行文件
 function(create_example name sources)
@@ -82,9 +82,4 @@ target_link_libraries(ORBextractorTest
   ${DBoW3_LIBS}
 )
 
-create_example(OrbbecIMUSetting Examples/OrbbecDemo/OrbbecIMUSetting.cpp)
 create_example(DBoW3Test Examples/DBoW3Test.cpp)
-create_example(ViewTest Examples/OrbbecDemo/ViewTest.cpp)
-create_example(TurnOffLaserDemo Examples/OrbbecDemo/TurnOffLaserDemo.cpp)
-create_example(OrbbecDoubleIRView Examples/OrbbecDemo/OrbbecDoubleIRView.cpp)
-create_example(MultiDevice Examples/OrbbecDemo/MultiDevice.cpp)
