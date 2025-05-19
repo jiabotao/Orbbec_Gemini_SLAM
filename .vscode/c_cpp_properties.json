@@ -6,6 +6,7 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
                 "/usr/local/include/opencv4",
+                "/opt/OrbbecSDK/include",
                 "/usr/local/include/eigen3"
             ],
             "defines": [],

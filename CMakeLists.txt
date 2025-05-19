@@ -13,19 +13,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # 强制要求使用指定的 C++ 标准
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON) # 强制要求使用指定的 C 标准
 
+
 include_directories(
   /usr/include/
-  #/usr/include/fmtss
-  /usr/local/include/eigen3
-  /usr/local/include/sophus
-  /usr/local/include/g2o
-  /usr/local/include/libobsensor
+  /opt/OrbbecSDK/include
   ${PROJECT_SOURCE_DIR}/include
 )
 
-link_directories(/usr/local/lib)
-find_package(OpenCV 4.4 REQUIRED)
+# 定义全局链接目录
+link_directories(
+  /usr/local/lib
+  /opt/OrbbecSDK/lib
+)
+
 # 检查是否找到 OpenCV
+find_package(OpenCV 4.9 REQUIRED)
 if(OpenCV_FOUND)
     message(STATUS "OpenCV found: ${OpenCV_VERSION}")
     include_directories(${OpenCV_INCLUDE_DIRS})
@@ -33,8 +35,38 @@ else()
     message(FATAL_ERROR "OpenCV not found.")
 endif()
 
-set( DBoW3_INCLUDE_DIRS "/usr/local/include" )#在文件的前部插入
-set( DBoW3_LIBS "/usr/local/lib/libDBoW3.so" )#在文件的前部插入
+# 检查是否找到 Eigen3
+find_package(Eigen3 3.3 REQUIRED)
+if(Eigen3_FOUND)
+    include_directories(${EIGEN3_INCLUDE_DIRS})
+    message(STATUS "Eigen3 found")
+else()
+    message(FATAL_ERROR "Eigen3 not found.")
+endif()
+
+# 检查是否找到 Sophus
+find_package(Sophus REQUIRED)
+if(Sophus_FOUND)
+    include_directories(${Sophus_INCLUDE_DIRS})
+    message(STATUS "Sophus found")
+else()
+    message(FATAL_ERROR "Sophus not found.")
+endif()
+
+find_package(DBoW3 REQUIRED)
+if(DBoW3_FOUND)
+    include_directories(${DBoW3_INCLUDE_DIRS})
+    message(STATUS "DBoW3_INCLUDE_DIRS: ${DBoW3_INCLUDE_DIRS}")
+else()
+    message(FATAL_ERROR "DBoW3_LIBRARIES not found.")
+endif()
+
+find_package(g2o REQUIRED)
+if(g2o_FOUND)
+    message(STATUS "g2o: ${g2o_LIBRARIES}")
+else()
+    message(FATAL_ERROR "g2o not found.")
+endif()
 
 add_executable(IMUReaderDemo 
     src/IMUReaderDemo.cpp 
@@ -44,32 +76,25 @@ add_executable(IMUReaderDemo
     src/ORBextractor.cpp
 )
 
-file(GLOB G2O_LIBRARIES CONFIGURE_DEPENDS "/usr/local/lib/libg2o_*.so")
-
-target_link_libraries(IMUReaderDemo PRIVATE
-  ${G2O_LIBRARIES}
-  /usr/local/lib/libOrbbecSDK.so
+target_link_libraries(IMUReaderDemo
+  ${g2o_LIBRARIES}
+  /opt/OrbbecSDK/lib/libOrbbecSDK.so
   ${OpenCV_LIBS}
-  ${DBoW3_LIBS}
+  ${DBoW3_LIBRARIES}
   -lboost_serialization
 )
 
-# Examples/OrbbecIMUSetting.cpp 编译配置
-add_executable(IMUReader 
-    Examples/OrbbecDemo/OrbbecIMUSetting.cpp 
-)
-target_link_libraries(IMUReader
-  /usr/local/lib/libOrbbecSDK.so
-)
-
-# Examples/OrbbecIMUSetting.cpp 编译配置
-add_executable(DBoW3Test 
-    Examples/DBoW3Test.cpp 
-)
-target_link_libraries(DBoW3Test
-  ${OpenCV_LIBS}
-  ${DBoW3_LIBS}
-)
+# 定义可重用的函数来创建可执行文件
+function(create_example name sources)
+  add_executable(${name} ${sources})
+  target_link_libraries(${name}
+    ${OpenCV_LIBS}
+    ${DBoW3_LIBRARIES}
+    ${g2o_LIBRARIES}
+    /opt/OrbbecSDK/lib/libOrbbecSDK.so
+    -lboost_serialization
+  )
+endfunction()
 
 # Examples/ORBextractorTest.cpp 编译配置
 add_executable(ORBextractorTest 
@@ -81,37 +106,9 @@ target_link_libraries(ORBextractorTest
   ${DBoW3_LIBS}
 )
 
-# Examples/OrbbecIMUSetting.cpp 编译配置
-add_executable(ModeList 
-    Examples/OrbbecDemo/ViewTest.cpp 
-)
-target_link_libraries(ModeList
-  /usr/local/lib/libOrbbecSDK.so
-)
-
-# Examples/OrbbecIMUSetting.cpp 编译配置
-add_executable(TurnOffLaserDemo 
-    Examples/OrbbecDemo/TurnOffLaserDemo.cpp 
-)
-target_link_libraries(TurnOffLaserDemo
-  ${OpenCV_LIBS}
-  /usr/local/lib/libOrbbecSDK.so
-)
-
-# Examples/OrbbecIMUSetting.cpp 编译配置
-add_executable(OrbbecDoubleIRView 
-    Examples/OrbbecDemo/OrbbecDoubleIRView.cpp 
-)
-target_link_libraries(OrbbecDoubleIRView
-  ${OpenCV_LIBS}
-  /usr/local/lib/libOrbbecSDK.so
-)
-
-# Examples/OrbbecIMUSetting.cpp 编译配置
-add_executable(MultiDevice 
-    Examples/OrbbecDemo/MultiDevice.cpp 
-)
-target_link_libraries(MultiDevice
-  ${OpenCV_LIBS}
-  /usr/local/lib/libOrbbecSDK.so
-)
+create_example(OrbbecIMUSetting Examples/OrbbecDemo/OrbbecIMUSetting.cpp)
+create_example(DBoW3Test Examples/DBoW3Test.cpp)
+create_example(ViewTest Examples/OrbbecDemo/ViewTest.cpp)
+create_example(TurnOffLaserDemo Examples/OrbbecDemo/TurnOffLaserDemo.cpp)
+create_example(OrbbecDoubleIRView Examples/OrbbecDemo/OrbbecDoubleIRView.cpp)
+create_example(MultiDevice Examples/OrbbecDemo/MultiDevice.cpp)
