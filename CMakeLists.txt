@@ -1,18 +1,10 @@
 cmake_minimum_required(VERSION 3.28)
 project(Orbbec_Gemini_SLAM)
-
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE Release)
-ENDIF()
-
-# 设置 C++ 标准为 C++17
+SET(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON) # 强制要求使用指定的 C++ 标准
-
-# 设置 C 标准为 C99
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED ON) # 强制要求使用指定的 C 标准
-
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include_directories(
   /usr/include/
@@ -29,8 +21,9 @@ link_directories(
 # 检查是否找到 OpenCV
 find_package(OpenCV 4.9 REQUIRED)
 if(OpenCV_FOUND)
-    message(STATUS "OpenCV found: ${OpenCV_VERSION}")
     include_directories(${OpenCV_INCLUDE_DIRS})
+    message(STATUS "OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
+    message(STATUS "OpenCV_LIBS: ${OpenCV_LIBS}")
 else()
     message(FATAL_ERROR "OpenCV not found.")
 endif()
@@ -39,33 +32,18 @@ endif()
 find_package(Eigen3 3.3 REQUIRED)
 if(Eigen3_FOUND)
     include_directories(${EIGEN3_INCLUDE_DIRS})
-    message(STATUS "Eigen3 found")
+    message(STATUS "EIGEN3_INCLUDE_DIRS: ${EIGEN3_INCLUDE_DIRS}")
 else()
     message(FATAL_ERROR "Eigen3 not found.")
-endif()
-
-# 检查是否找到 Sophus
-find_package(Sophus REQUIRED)
-if(Sophus_FOUND)
-    include_directories(${Sophus_INCLUDE_DIRS})
-    message(STATUS "Sophus found")
-else()
-    message(FATAL_ERROR "Sophus not found.")
 endif()
 
 find_package(DBoW3 REQUIRED)
 if(DBoW3_FOUND)
     include_directories(${DBoW3_INCLUDE_DIRS})
     message(STATUS "DBoW3_INCLUDE_DIRS: ${DBoW3_INCLUDE_DIRS}")
+    message(STATUS "DBoW3_LIBRARIES found:${DBoW3_LIBRARIES}")
 else()
-    message(FATAL_ERROR "DBoW3_LIBRARIES not found.")
-endif()
-
-find_package(g2o REQUIRED)
-if(g2o_FOUND)
-    message(STATUS "g2o: ${g2o_LIBRARIES}")
-else()
-    message(FATAL_ERROR "g2o not found.")
+    message(FATAL_ERROR "DBoW3 not found.")
 endif()
 
 add_executable(IMUReaderDemo 
@@ -77,7 +55,6 @@ add_executable(IMUReaderDemo
 )
 
 target_link_libraries(IMUReaderDemo
-  ${g2o_LIBRARIES}
   /opt/OrbbecSDK/lib/libOrbbecSDK.so
   ${OpenCV_LIBS}
   ${DBoW3_LIBRARIES}
@@ -90,7 +67,6 @@ function(create_example name sources)
   target_link_libraries(${name}
     ${OpenCV_LIBS}
     ${DBoW3_LIBRARIES}
-    ${g2o_LIBRARIES}
     /opt/OrbbecSDK/lib/libOrbbecSDK.so
     -lboost_serialization
   )
