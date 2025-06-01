@@ -135,8 +135,8 @@ ${ORBBEC_SDK_DIR}/lib/libOrbbecSDK.so
 #Stereo Inertial examples
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo-Inertial)
 
-add_executable(stereo_inertial_realsense_t265
-        Examples/Stereo-Inertial/stereo_inertial_realsense_t265.cc)
-target_link_libraries(stereo_inertial_realsense_t265 ${PROJECT_NAME})
+add_executable(vio_gemini
+        Examples/Stereo-Inertial/stereo_inertial_orbbec_gemini335l.cc)
+target_link_libraries(vio_gemini ${PROJECT_NAME})
 
 
